@@ -21,7 +21,24 @@
  *        with the resulting string with all the names in upper case
  *        only after writing the contents to the disk.
  */
-function uppercase(callback) {}
+
+const path = require("path");
+const fs = require("fs");
+const FILE_PATH = path.resolve(__dirname, "names.txt");
+
+function uppercase(callback) {
+  fs.readFile(FILE_PATH, { encoding: "utf-8" }, (err, data) =>{
+    if(err) throw err;
+    let arr = data.split(";");
+    const upperCasedNames = arr.map((name) => name.toUpperCase()).join(";");
+
+    fs.writeFile(FILE_PATH, upperCasedNames, { encoding: "utf-8" }, (err, data) =>{
+      if(err) throw err;
+
+      callback(upperCasedNames);
+    })
+  })
+}
 
 /**
  * 3. Export the `uppercase` function as a named export
@@ -29,4 +46,6 @@ function uppercase(callback) {}
  * @hint
  * { a: a }
  */
-module.exports = {};
+module.exports = {
+  uppercase: uppercase
+};
